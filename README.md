@@ -1,9 +1,9 @@
 ### Run
 Start the frontend
 ```
-python3 interface.py
+cd frontend && python3 main.py
 ```
 Start the backend
 ```
-uvicorn backend:app --reload
+cd frontend && python3 main.py
 ```

@@ -16,7 +16,7 @@ def get_simplification(text, model):
     return text
 
 
-gradio.close_all() # close already running instances
+gradio.close_all()  # close already running instances
 models = ["mBART", "mT5"]
 text_input = gradio.inputs.Textbox(lines=10, placeholder="Type here", label="Complex Sentence")
 model_selection = gradio.inputs.Dropdown(models, type="value", default="mT5", label=None)
@@ -39,3 +39,5 @@ iface = gradio.Interface(
     examples=examples
 )
 iface.launch(share=False, server_port=5000)
+
+### todo handle queue
