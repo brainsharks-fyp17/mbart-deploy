@@ -52,3 +52,6 @@ def generate(source_sentences: list):
         out = out.replace("\u0dca \u0dbb", "\u0dca\u200d\u0dbb").replace("\u0dca \u0dba", "\u0dca\u200d\u0dba")
         reply += out + "\n"
     return reply
+
+
+
