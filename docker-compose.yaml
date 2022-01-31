@@ -1,0 +1,22 @@
+version: "3.7"
+services:
+  frontend:
+    build:
+      context: frontend
+      dockerfile: Dockerfile
+    environment:
+      - PORT=5000
+    env_file:
+      - frontend/.env
+    ports:
+      - "5000:5000"
+    links:
+      - backend
+  backend:
+    build:
+      context: backend
+      dockerfile: Dockerfile
+    env_file:
+      - backend/.env
+    ports:
+      - "8000:8000"
