@@ -1,6 +1,10 @@
+import logging.config
+
 from fastapi import FastAPI
 from pydantic import BaseModel
 from load_model import Args, load_model, generate
+logging.config.fileConfig('logging.conf')
+logger = logging.getLogger('frontend')
 
 app = FastAPI()
 # The ML model takes a significant amount of time to generate results.
@@ -16,11 +20,13 @@ class RequestBody(BaseModel):
 def generate_simp(body: RequestBody):
     try:
         text = body.text
+        logger.debug("Received for /generate: "+str(text))
         if Args.model_path == "":
             load_model()
         global is_busy
         is_busy = 1
         out = generate(text.split("\n"))
+        logger.debug("Output from /generate: "+str(out))
         is_busy = 0
         return {"simplification": out}
     except Exception as e:
