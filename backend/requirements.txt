@@ -2,3 +2,4 @@ python-dotenv==0.19.1
 uvicorn==0.17.0
 fastapi==0.72.0
 gevent==21.8.0
+sentencepiece
