@@ -46,5 +46,5 @@ def busy_status():
 
 if __name__ == "__main__":
     import uvicorn
-
+    load_model()
     uvicorn.run("main:app", debug=True, reload=True)
