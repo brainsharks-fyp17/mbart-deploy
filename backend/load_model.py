@@ -74,5 +74,5 @@ def generate(source_sentences: list):
 
         # Fix zero-width joiner issue.
         out = out.replace("\u0dca \u0dbb", "\u0dca\u200d\u0dbb").replace("\u0dca \u0dba", "\u0dca\u200d\u0dba")
-        generated += out + "\n"
+        generated += out + " .\n"
     return generated
