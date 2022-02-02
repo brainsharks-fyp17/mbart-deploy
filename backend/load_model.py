@@ -1,4 +1,4 @@
-from transformers import MT5ForConditionalGeneration, T5Tokenizer
+from transformers import MT5ForConditionalGeneration, T5Tokenizer, MBartForConditionalGeneration, MBartTokenizer
 import torch
 from dotenv import load_dotenv
 import logging.config
@@ -30,10 +30,10 @@ def load_model():
     global tokenizer
     global model
     global device
-    Args.model_path = "Rumesh/txt-smp-si2"
-    model = MT5ForConditionalGeneration.from_pretrained(Args.model_path)
+    Args.model_path = "Rumesh/txt-smp-mbart"
+    model = MBartForConditionalGeneration.from_pretrained(Args.model_path)
     model.to(device)
-    tokenizer = T5Tokenizer.from_pretrained(Args.model_path)
+    tokenizer = MBartTokenizer.from_pretrained(Args.model_path)
     return model, tokenizer
 
 
@@ -47,12 +47,18 @@ def generate(source_sentences: list):
         # Attach task prefix.
         line = Args.task + ": " + line
 
-        input_ids = tokenizer(line, return_tensors="pt").input_ids
-        input_ids = input_ids.to(device)
-        output_ids = model.generate(input_ids=input_ids, do_sample=bool(Args.do_sample), temperature=float(Args.temp),
-                                    max_length=int(Args.max_length), top_k=int(Args.top_k), top_p=float(Args.top_p),
-                                    repetition_penalty=float(Args.rep_pen), num_beams=int(Args.num_beams))
-        out = tokenizer.decode(output_ids[0])
+        inputs = tokenizer(line, max_length=700, return_tensors="pt", padding=True).to(device)
+        summary_ids = model.generate(inputs["input_ids"], num_beams=int(Args.num_beams),
+                                     max_length=int(Args.max_length)).to(device)
+        out = tokenizer.batch_decode(summary_ids, skip_special_tokens=True,
+                                                clean_up_tokenization_spaces=False)
+
+        # input_ids = tokenizer(line, return_tensors="pt").input_ids
+        # input_ids = input_ids.to(device)
+        # output_ids = model.generate(input_ids=input_ids, do_sample=bool(Args.do_sample), temperature=float(Args.temp),
+        #                             max_length=int(Args.max_length), top_k=int(Args.top_k), top_p=float(Args.top_p),
+        #                             repetition_penalty=float(Args.rep_pen), num_beams=int(Args.num_beams))
+        # out = tokenizer.decode(output_ids[0])
 
         # Remove pad and eos tokens.
         out = out.strip().replace('<pad>', '').replace('</s>', '').strip(" ")
