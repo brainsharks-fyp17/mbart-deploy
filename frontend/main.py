@@ -31,7 +31,7 @@ output = gradio.outputs.Textbox(type="str", label="Simplified")
 
 iface = gradio.Interface(
     fn=get_simplification,
-    title="Text Simplification",
+    title="Text Simplification for Sinhala Language",
     description=description,
     article=article,
     inputs=[text_input],

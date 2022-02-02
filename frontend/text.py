@@ -6,5 +6,5 @@ This supports markdown.
 
 description = "Description goes here"
 
-examples = [["example 1 text"],
-            ["example 2 text "]]
+examples = [["මෙම ආසියානු සංවර්ධන බැංකු ණය ආධාර මුදල ගෙවීම සඳහා වසර පහක සහන කාලයක් ලැබේ."],
+            ["ඉගෙනුම් සහ ඉගැන්වීමේ ක්‍රියාවලියට අනුබලයක් සැපයෙන පරිදි මූලික ශාලාව හා රැස්වීම් ශාලාව සැලසුම් කර ඇත."]]
