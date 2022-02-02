@@ -3,7 +3,7 @@ import traceback
 
 from fastapi import FastAPI
 from pydantic import BaseModel
-from load_model import Args, load_model, generate
+from load_model import generate
 
 # logging.config.fileConfig('logging.conf')
 # logger = logging.getLogger('frontend')
@@ -61,6 +61,6 @@ if __name__ == "__main__":
     import uvicorn
 
     print("Loading the model................")
-    load_model()
+    # load_model()
     print("Model Loaded to memory")
     uvicorn.run("main:app", debug=True, reload=True)

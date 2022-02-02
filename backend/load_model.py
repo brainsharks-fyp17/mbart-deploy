@@ -8,11 +8,6 @@ load_dotenv()
 logging.config.fileConfig('logging.conf')
 logger = logging.getLogger('frontend')
 
-device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-
-model = None
-tokenizer = None
-
 
 class Args:
     model_path = "Rumesh/txt-smp-mbart"
@@ -26,14 +21,20 @@ class Args:
     task = os.getenv("TASK", "com-sim")
 
 
-def load_model():
-    global tokenizer
-    global model
-    global device
-    model = MBartForConditionalGeneration.from_pretrained(Args.model_path)
-    model.to(device)
-    tokenizer = MBartTokenizer.from_pretrained(Args.model_path)
-    return model, tokenizer
+device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+model = MBartForConditionalGeneration.from_pretrained(Args.model_path)
+model.to(device)
+tokenizer = MBartTokenizer.from_pretrained(Args.model_path)
+
+
+# def load_model():
+#     global tokenizer
+#     global model
+#     global device
+#     model = MBartForConditionalGeneration.from_pretrained(Args.model_path)
+#     model.to(device)
+#     tokenizer = MBartTokenizer.from_pretrained(Args.model_path)
+#     return model, tokenizer
 
 
 def generate(source_sentences: list):
