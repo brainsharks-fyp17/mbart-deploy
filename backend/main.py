@@ -3,13 +3,23 @@ import logging.config
 from fastapi import FastAPI
 from pydantic import BaseModel
 from load_model import Args, load_model, generate
-logging.config.fileConfig('logging.conf')
-logger = logging.getLogger('frontend')
+
+# logging.config.fileConfig('logging.conf')
+# logger = logging.getLogger('frontend')
 
 app = FastAPI()
 # The ML model takes a significant amount of time to generate results.
 # whether the model is generating right now or not is stored in `is_busy`
 is_busy = 0
+logger = logging.getLogger("uvicorn.access")
+
+
+@app.on_event("startup")
+async def startup_event():
+    logger = logging.getLogger("uvicorn.access")
+    handler = logging.StreamHandler()
+    handler.setFormatter(logging.Formatter("%(asctime)s - %(levelname)s - %(message)s"))
+    logger.addHandler(handler)
 
 
 class RequestBody(BaseModel):
@@ -54,4 +64,4 @@ if __name__ == "__main__":
     logger.info("Loading the model................")
     load_model()
     logger.info("Model Loaded to memory")
-    uvicorn.run("main:app", debug=True, reload=True, log_config=None)
+    uvicorn.run("main:app", debug=True, reload=True)
