@@ -59,8 +59,4 @@ def busy_status():
 
 if __name__ == "__main__":
     import uvicorn
-
-    print("Loading the model................")
-    # load_model()
-    print("Model Loaded to memory")
     uvicorn.run("main:app", debug=True, reload=True)
