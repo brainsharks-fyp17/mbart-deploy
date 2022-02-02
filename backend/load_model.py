@@ -21,10 +21,12 @@ class Args:
     task = os.getenv("TASK", "com-sim")
 
 
+print("Loading the model..............")
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 model = MBartForConditionalGeneration.from_pretrained(Args.model_path)
 model.to(device)
 tokenizer = MBartTokenizer.from_pretrained(Args.model_path)
+print("Loading done")
 
 
 # def load_model():
