@@ -51,7 +51,7 @@ def generate(source_sentences: list):
         summary_ids = model.generate(inputs["input_ids"], num_beams=int(Args.num_beams),
                                      max_length=int(Args.max_length)).to(device)
         out = tokenizer.batch_decode(summary_ids, skip_special_tokens=True,
-                                                clean_up_tokenization_spaces=False)
+                                     clean_up_tokenization_spaces=False)
 
         # input_ids = tokenizer(line, return_tensors="pt").input_ids
         # input_ids = input_ids.to(device)
@@ -61,6 +61,7 @@ def generate(source_sentences: list):
         # out = tokenizer.decode(output_ids[0])
 
         # Remove pad and eos tokens.
+        out = out[0]
         out = out.strip().replace('<pad>', '').replace('</s>', '').strip(" ")
 
         # Fix zero-width joiner issue.
