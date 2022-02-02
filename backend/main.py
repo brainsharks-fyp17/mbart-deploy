@@ -30,7 +30,7 @@ class RequestBody(BaseModel):
 def generate_simp(body: RequestBody):
     try:
         text = body.text
-        logger.debug("Received for /generate: " + str(text))
+        print("Received for /generate: " + str(text))
         if Args.model_path == "":
             load_model()
         global is_busy
