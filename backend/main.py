@@ -1,4 +1,5 @@
 import logging.config
+import traceback
 
 from fastapi import FastAPI
 from pydantic import BaseModel
@@ -42,7 +43,7 @@ def generate_simp(body: RequestBody):
         return {"simplification": out}
     except Exception as e:
         is_busy = 0
-        print(str(e))
+        traceback.print_exc()
         return {"error": str(e)}, 500
 
 
