@@ -19,10 +19,7 @@ def get_simplification(text):
     url = "http://" + backend_host + ":" + str(backend_port) + "/" + request_path
     data = {"text": text}
     response = requests.post(url, json=data).json()
-    text = ""
-    for line in response["simplification"]:
-        text += line + "\n"
-    return text
+    return response["simplification"]
 
 
 gradio.close_all()  # close already running instances
