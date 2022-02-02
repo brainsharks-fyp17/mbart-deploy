@@ -29,7 +29,7 @@ def generate_simp(body: RequestBody):
         logger.debug("Length of input: "+str(len(input_sent)))
         logger.debug("Input: "+str(input_sent))
         out = generate(input_sent)
-        logger.debug("Output from /generate: "+str(out))
+        logger.info("Output from /generate: "+str(out))
         is_busy = 0
         return {"simplification": out}
     except Exception as e:
@@ -50,7 +50,7 @@ def busy_status():
 
 if __name__ == "__main__":
     import uvicorn
-    logger.debug("Loading the model................")
+    logger.info("Loading the model................")
     load_model()
-    logger.debug("Model Loaded to memory")
+    logger.info("Model Loaded to memory")
     uvicorn.run("main:app", debug=True, reload=True)
