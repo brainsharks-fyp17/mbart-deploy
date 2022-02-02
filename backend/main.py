@@ -25,12 +25,16 @@ def generate_simp(body: RequestBody):
             load_model()
         global is_busy
         is_busy = 1
-        out = generate(text.split("\n"))
+        input_sent = text.split("\n")
+        logger.debug("Length of input: "+str(len(input_sent)))
+        logger.debug("Input: "+str(input_sent))
+        out = generate(input_sent)
         logger.debug("Output from /generate: "+str(out))
         is_busy = 0
         return {"simplification": out}
     except Exception as e:
         is_busy = 0
+        logger.warning(str(e))
         return {"error": str(e)}, 500
 
 
