@@ -30,7 +30,7 @@ def load_model():
     global tokenizer
     global model
     global device
-    Args.model_path = "Rumesh/txt-smp-si"
+    Args.model_path = "Rumesh/txt-smp-si2"
     model = MT5ForConditionalGeneration.from_pretrained(Args.model_path)
     model.to(device)
     tokenizer = T5Tokenizer.from_pretrained(Args.model_path)
