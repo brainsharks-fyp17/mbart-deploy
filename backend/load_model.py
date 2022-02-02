@@ -15,7 +15,7 @@ tokenizer = None
 
 
 class Args:
-    model_path = ""
+    model_path = "Rumesh/txt-smp-mbart"
     top_p = os.getenv("TOP_P", "0.95")
     top_k = os.getenv("TOP_K", "50")
     do_sample = os.getenv("DO_SAMPLE", "0")
@@ -30,7 +30,6 @@ def load_model():
     global tokenizer
     global model
     global device
-    Args.model_path = "Rumesh/txt-smp-mbart"
     model = MBartForConditionalGeneration.from_pretrained(Args.model_path)
     model.to(device)
     tokenizer = MBartTokenizer.from_pretrained(Args.model_path)

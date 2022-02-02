@@ -31,8 +31,6 @@ def generate_simp(body: RequestBody):
     try:
         text = body.text
         print("Received for /generate: " + str(text))
-        if Args.model_path == "":
-            load_model()
         global is_busy
         is_busy = 1
         input_sent = text.split("\n")
