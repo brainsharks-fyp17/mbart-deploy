@@ -43,7 +43,7 @@ def generate_simp(body: RequestBody):
         print("Output from /generate: " + str(out))
         is_busy = 0
         end_timer = timer()
-        print("Time taken: " + str(round(end_timer - start_timer, 4)))
+        print("Time taken: " + str(round(end_timer - start_timer, 4))+" s")
         return {"simplification": out}
     except Exception as e:
         is_busy = 0

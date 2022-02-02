@@ -3,6 +3,7 @@ import torch
 from dotenv import load_dotenv
 import logging.config
 import os
+from timeit import default_timer as timer
 
 load_dotenv()
 logging.config.fileConfig('logging.conf')
@@ -22,11 +23,16 @@ class Args:
 
 
 print("Loading the model..............")
+start_timer = timer()
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 model = MBartForConditionalGeneration.from_pretrained(Args.model_path)
 model.to(device)
 tokenizer = MBartTokenizer.from_pretrained(Args.model_path)
+end_timer = timer()
 print("Loading done")
+print("Time taken to load the model: " + str(round(end_timer - start_timer, 4))+" s")
+del start_timer
+del end_timer
 
 
 # def load_model():
