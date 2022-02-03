@@ -1,4 +1,4 @@
-FROM python:3.9
+FROM python:3.8
 # make sure the build context is '/backend' dir
 WORKDIR /usr/src/app
 COPY . /usr/src/app/
