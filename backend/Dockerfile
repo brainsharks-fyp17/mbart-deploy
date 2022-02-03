@@ -12,4 +12,4 @@ ENV LC_ALL C.UTF-8
 ENV LANG C.UTF-8
 EXPOSE 8000
 ENTRYPOINT ["uvicorn"]
-CMD ["main:app","-b",":8000","--workers","1","--log-level","debug","--worker-class","gevent","--preload","--limit-concurrency","3"]
+CMD ["main:app","--port","8000","--workers","1","--log-level","debug","--limit-concurrency","3"]
