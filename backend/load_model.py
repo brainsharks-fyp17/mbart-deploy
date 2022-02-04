@@ -12,13 +12,8 @@ logger = logging.getLogger('frontend')
 
 class Args:
     model_path = "facebook/mbart-large-50"
-    top_p = os.getenv("TOP_P", "0.95")
-    top_k = os.getenv("TOP_K", "50")
-    do_sample = os.getenv("DO_SAMPLE", "0")
-    temp = os.getenv("TEMP", "1")
     max_length = os.getenv("MAX_LENGTH", "700")
-    num_beams = os.getenv("NUM_BEANS", "5")
-    rep_pen = os.getenv("REP_PEN", "1.0")
+    num_beams = os.getenv("NUM_BEAMS", "5")
     task = os.getenv("TASK", "com-sim")
 
 
@@ -29,20 +24,10 @@ model = AutoModelForSeq2SeqLM.from_pretrained(Args.model_path)
 model.to(device)
 tokenizer = AutoTokenizer.from_pretrained(Args.model_path)
 end_timer = timer()
-print("Loading done")
+print("Loaded the model")
 print("Time taken to load the model: " + str(round(end_timer - start_timer, 4))+" s")
 del start_timer
 del end_timer
-
-
-# def load_model():
-#     global tokenizer
-#     global model
-#     global device
-#     model = MBartForConditionalGeneration.from_pretrained(Args.model_path)
-#     model.to(device)
-#     tokenizer = MBartTokenizer.from_pretrained(Args.model_path)
-#     return model, tokenizer
 
 
 def generate(source_sentences: list):
@@ -61,18 +46,11 @@ def generate(source_sentences: list):
         out = tokenizer.batch_decode(summary_ids, skip_special_tokens=True,
                                      clean_up_tokenization_spaces=False)
 
-        # input_ids = tokenizer(line, return_tensors="pt").input_ids
-        # input_ids = input_ids.to(device)
-        # output_ids = model.generate(input_ids=input_ids, do_sample=bool(Args.do_sample), temperature=float(Args.temp),
-        #                             max_length=int(Args.max_length), top_k=int(Args.top_k), top_p=float(Args.top_p),
-        #                             repetition_penalty=float(Args.rep_pen), num_beams=int(Args.num_beams))
-        # out = tokenizer.decode(output_ids[0])
-
         # Remove pad and eos tokens.
         out = out[0]
         out = out.strip().replace('<pad>', '').replace('</s>', '').strip(" ")
 
         # Fix zero-width joiner issue.
         out = out.replace("\u0dca \u0dbb", "\u0dca\u200d\u0dbb").replace("\u0dca \u0dba", "\u0dca\u200d\u0dba")
-        generated += out + " .\n"
+        generated += out + "\n"
     return generated
