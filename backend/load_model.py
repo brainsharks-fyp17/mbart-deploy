@@ -11,7 +11,7 @@ logger = logging.getLogger('frontend')
 
 
 class Args:
-    model_path = "Rumesh/txt-smp-mbart"
+    model_path = "facebook/mbart-large-50"
     top_p = os.getenv("TOP_P", "0.95")
     top_k = os.getenv("TOP_K", "50")
     do_sample = os.getenv("DO_SAMPLE", "0")
