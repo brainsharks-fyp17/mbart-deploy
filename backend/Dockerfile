@@ -5,5 +5,7 @@ COPY . /usr/src/app/
 RUN pip install -r requirements.txt -r requirements-local.txt
 ENV PYTHONUNBUFFERED 1
 EXPOSE 8000
-ENTRYPOINT ["uvicorn"]
-CMD ["main:app","--port","8000","--log-level","debug"]
+RUN python cache_model.py
+#ENTRYPOINT ["uvicorn"]
+#CMD ["main:app","--port","8000","--log-level","debug"]
+CMD ["python","main.py"]
