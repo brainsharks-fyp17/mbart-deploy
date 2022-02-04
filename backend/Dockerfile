@@ -3,9 +3,6 @@ FROM python:3.8
 WORKDIR /usr/src/app
 COPY . /usr/src/app/
 RUN pip install -r requirements.txt -r requirements-local.txt
-RUN addgroup --system user && adduser --system --no-create-home --group user
-RUN chown -R user:user /usr/src/app && chmod -R 755 /usr/src/app
-USER user
 ENV PYTHONUNBUFFERED 1
 EXPOSE 8000
 ENTRYPOINT ["uvicorn"]
