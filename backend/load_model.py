@@ -11,7 +11,7 @@ logger = logging.getLogger('frontend')
 
 
 class Args:
-    model_path = "facebook/mbart-large-50"
+    model_path = os.getenv("MODEL_PATH", "Rumesh/txt-smp-mbart")
     max_length = os.getenv("MAX_LENGTH", "700")
     num_beams = os.getenv("NUM_BEAMS", "5")
     task = os.getenv("TASK", "com-sim")
