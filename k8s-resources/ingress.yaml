@@ -1,0 +1,20 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ingress-prod
+  annotations:
+    kubernetes.io/ingress.global-static-ip-name: hellodwefmdfc
+    networking.gke.io/managed-certificates: "mcrt-596f1fc7-aac8-4568-8eef-0ae43710fd72"
+    kubernetes.io/ingress.class: "gce"
+spec:
+  rules:
+    - host: asset-app-grp1.ml
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: frontend-service
+                port:
+                  number: 5000

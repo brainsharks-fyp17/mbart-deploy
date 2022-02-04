@@ -1,0 +1,79 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: backend-config
+data:
+  MODEL_PATH: "Rumesh/txt-smp-mbart"
+  MAX_LENGTH: "700"
+  NUM_BEAMS: "5"
+  TASK: "com-sim"
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend-deployment
+  labels:
+    app: backend
+spec:
+  selector:
+    matchLabels:
+      app: backend
+  replicas: 2
+  strategy:
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: backend
+    spec:
+      containers:
+        - name: backend-deployment
+          image: dock-reg-0001.ml/asset-app:0.1.4
+          imagePullPolicy: Always
+          env:
+            - name: MODEL_PATH
+              valueFrom:
+                configMapKeyRef:
+                  name: backend-config
+                  key: MODEL_PATH
+            - name: MAX_LENGTH
+              valueFrom:
+                configMapKeyRef:
+                  name: backend-config
+                  key: MAX_LENGTH
+            - name: NUM_BEAMS
+              valueFrom:
+                configMapKeyRef:
+                  name: backend-config
+                  key: NUM_BEAMS
+            - name: TASK
+              valueFrom:
+                configMapKeyRef:
+                  name: backend-config
+                  key: TASK
+          ports:
+            - containerPort: 8000
+#          readinessProbe:
+#            httpGet:
+#              path: /ready
+#              port: 5000
+#          livenessProbe:
+#            httpGet:
+#              path: /health
+#              port: 5000
+#            initialDelaySeconds: 3
+#            periodSeconds: 3
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: backend-service
+spec:
+  type: ClusterIP
+  ports:
+    - targetPort: 8000
+      port: 8000
+  selector:
+    app: backend
+
+# todo change the docker image
