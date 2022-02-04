@@ -1,4 +1,4 @@
-from transformers import AutoModelForSeq2SeqLM, AutoTokenizer
+from transformers import MBartTokenizer, MBartForConditionalGeneration
 import torch
 from dotenv import load_dotenv
 import logging.config
@@ -20,9 +20,9 @@ class Args:
 print("Loading the model..............")
 start_timer = timer()
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-model = AutoModelForSeq2SeqLM.from_pretrained(Args.model_path)
+model = MBartForConditionalGeneration.from_pretrained(Args.model_path)
 model.to(device)
-tokenizer = AutoTokenizer.from_pretrained(Args.model_path)
+tokenizer = MBartTokenizer.from_pretrained(Args.model_path)
 end_timer = timer()
 print("Loaded the model")
 print("Time taken to load the model: " + str(round(end_timer - start_timer, 4))+" s")
