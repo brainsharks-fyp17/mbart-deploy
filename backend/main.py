@@ -90,9 +90,9 @@ def generate_simp(body: RequestBody):
         is_busy = 1
         input_sent = text.split("\n")
         print("Length of input: " + str(len(input_sent)))
-        print("Input: " + str(input_sent))
+        print("Input: " + str(input_sent).strip())
         out = generate(input_sent)
-        print("Output from /generate: " + str(out))
+        print("Output from /generate: " + str(out).strip())
         is_busy = 0
         end_timer = timer()
         print("Time taken: " + str(round(end_timer - start_timer, 4)) + " s")
