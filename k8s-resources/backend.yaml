@@ -3,7 +3,7 @@ kind: ConfigMap
 metadata:
   name: backend-config
 data:
-  MODEL_PATH: "Rumesh/txt-smp-mbart"
+  MODEL_PATH: "Rumesh/mbart-si-simp"
   MAX_LENGTH: "700"
   NUM_BEAMS: "5"
   TASK: "com-sim"
