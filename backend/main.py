@@ -4,14 +4,24 @@ from fastapi import FastAPI
 from pydantic import BaseModel
 
 from transformers import MBartTokenizer, MBartForConditionalGeneration
-import torch
+from torch import device as torch_device
+from torch.cuda import is_available as is_cuda_available
 from dotenv import load_dotenv
 import logging.config
 import os
 from timeit import default_timer as timer
 
+from starlette_exporter import PrometheusMiddleware, handle_metrics
+
 load_dotenv()
 app = FastAPI()
+
+app.add_middleware(PrometheusMiddleware,
+                   app_name="backend",
+                   prefix="backend",
+                   filter_unhandled_paths=False,
+                   )
+app.add_route("/metrics", handle_metrics)
 # The ML model takes a significant amount of time to generate results.
 # whether the model is generating right now or not is stored in `is_busy`
 is_busy = 0
@@ -38,7 +48,7 @@ def startup_event():
     global tokenizer
     print("Loading the model..............")
     start_timer = timer()
-    device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+    device = torch_device('cuda' if is_cuda_available() else 'cpu')
     model = MBartForConditionalGeneration.from_pretrained(Args.model_path)
     model.to(device)
     tokenizer = MBartTokenizer.from_pretrained(Args.model_path)

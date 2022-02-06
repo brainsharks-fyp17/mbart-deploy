@@ -2,6 +2,7 @@ python-dotenv==0.19.1
 uvicorn==0.17.0
 fastapi==0.72.0
 gevent==21.8.0
-datasets
 sacrebleu==1.4.12
 sentencepiece==0.1.96
+datasets==1.3.5
+starlette_exporter==0.12.0
