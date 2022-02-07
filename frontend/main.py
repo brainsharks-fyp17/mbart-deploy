@@ -41,5 +41,3 @@ iface = gradio.Interface(
     examples=examples
 )
 iface.launch(share=False, server_port=5000, server_name="0.0.0.0")
-
-### todo handle queue

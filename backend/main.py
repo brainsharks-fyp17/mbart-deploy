@@ -24,17 +24,17 @@ app.add_middleware(PrometheusMiddleware,
                    filter_unhandled_paths=False,
                    )
 app.add_route("/metrics", handle_metrics)
-# The ML model takes a significant amount of time to generate results.
-# whether the model is generating right now or not is stored in `is_busy`
 cache_expire_in_seconds = 3600
 logger = logging.getLogger("uvicorn.access")
-
+# todo add a proper logger to work with uvicorn
+# todo add custom metric to measure SARI, BLEU
+# todo handle high memory consumption at starting time ~5GB vs 2GB
 
 class Args:
-    model_path = os.getenv("MODEL_PATH", "Rumesh/mbart-si-simp")
-    max_length = os.getenv("MAX_LENGTH", "700")
-    num_beams = os.getenv("NUM_BEAMS", "5")
-    task = os.getenv("TASK", "com-sim")
+    model_path = os.environ["MODEL_PATH"]
+    max_length = os.environ["MAX_LENGTH"]
+    num_beams = os.environ["NUM_BEAMS"]
+    task = os.environ["TASK"]
 
 
 # Load the model globally
