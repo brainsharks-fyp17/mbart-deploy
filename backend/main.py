@@ -1,19 +1,18 @@
 import json
-import traceback
-
-from fastapi import FastAPI
-from pydantic import BaseModel
-
-from transformers import MBartTokenizer, MBartForConditionalGeneration
-from torch import device as torch_device
-from torch.cuda import is_available as is_cuda_available
-from dotenv import load_dotenv
 import logging.config
 import os
-from timeit import default_timer as timer
+import traceback
 from datetime import timedelta
+from timeit import default_timer as timer
+
 import redis
+from dotenv import load_dotenv
+from fastapi import FastAPI
+from pydantic import BaseModel
 from starlette_exporter import PrometheusMiddleware, handle_metrics
+from torch import device as torch_device
+from torch.cuda import is_available as is_cuda_available
+from transformers import MBartTokenizer, MBartForConditionalGeneration
 
 load_dotenv()
 app = FastAPI()
