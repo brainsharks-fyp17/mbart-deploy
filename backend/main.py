@@ -1,3 +1,4 @@
+import json
 import traceback
 
 from fastapi import FastAPI
@@ -10,11 +11,13 @@ from dotenv import load_dotenv
 import logging.config
 import os
 from timeit import default_timer as timer
-
+from datetime import timedelta
+import redis
 from starlette_exporter import PrometheusMiddleware, handle_metrics
 
 load_dotenv()
 app = FastAPI()
+redis_client = redis.Redis(host=os.environ['REDIS_HOST'], port=int(os.environ['REDIS_PORT']))
 
 app.add_middleware(PrometheusMiddleware,
                    app_name="backend",
@@ -24,7 +27,7 @@ app.add_middleware(PrometheusMiddleware,
 app.add_route("/metrics", handle_metrics)
 # The ML model takes a significant amount of time to generate results.
 # whether the model is generating right now or not is stored in `is_busy`
-is_busy = 0
+cache_expire_in_seconds = 3600
 logger = logging.getLogger("uvicorn.access")
 
 
@@ -96,19 +99,34 @@ def generate_simp(body: RequestBody):
         start_timer = timer()
         text = body.text
         print("Received for /generate: " + str(text))
-        global is_busy
-        is_busy = 1
+        try:
+            redis_result = redis_client.get(f':{text}')
+            if redis_result:
+                print(f'search result from redis:{redis_result}')
+                cached_result = json.loads(redis_result)
+                return cached_result
+        except Exception as e:
+            traceback.print_exc()
+            print("Redis connection error")
+
         input_sent = text.split("\n")
         print("Length of input: " + str(len(input_sent)))
         print("Input: " + str(input_sent).strip())
         out = generate(input_sent)
+
+        try:
+            redis_client.set(f':{text}', json.dumps({"simplification": str(out)}))
+            redis_client.expire(f':{text}', timedelta(seconds=cache_expire_in_seconds))
+        except Exception as e:
+            print("Redis setting cache error")
+            pass
+
         print("Output from /generate: " + str(out).strip())
-        is_busy = 0
         end_timer = timer()
         print("Time taken: " + str(round(end_timer - start_timer, 4)) + " s")
         return {"simplification": out}
     except Exception as e:
-        is_busy = 0
+
         traceback.print_exc()
         return {"error": str(e)}, 500
 
@@ -118,9 +136,9 @@ def health():
     return {}
 
 
-@app.get('/busy')
-def busy_status():
-    return {"is_busy": is_busy}
+# @app.get('/busy')
+# def busy_status():
+#     return {"is_busy": is_busy}
 
 
 if __name__ == "__main__":
