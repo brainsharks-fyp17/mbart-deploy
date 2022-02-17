@@ -4,6 +4,6 @@ fastapi==0.72.0
 gevent==21.8.0
 sacrebleu==1.4.12
 sentencepiece==0.1.96
-datasets
 starlette_exporter==0.12.0
-redis==21.3
+redis
+datasets
