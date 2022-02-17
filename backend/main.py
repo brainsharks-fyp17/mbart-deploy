@@ -16,6 +16,7 @@ from transformers import MBartTokenizer, MBartForConditionalGeneration
 
 load_dotenv()
 app = FastAPI()
+logger = logging.getLogger("uvicorn")
 redis_client = redis.Redis(host=os.environ['REDIS_HOST'], port=int(os.environ['REDIS_PORT']))
 
 app.add_middleware(PrometheusMiddleware,
@@ -25,8 +26,8 @@ app.add_middleware(PrometheusMiddleware,
                    )
 app.add_route("/metrics", handle_metrics)
 cache_expire_in_seconds = 3600
-logger = logging.getLogger("uvicorn.access")
-# todo add a proper logger to work with uvicorn
+
+
 # todo add custom metric to measure SARI, BLEU
 # todo handle high memory consumption at starting time ~5GB vs 2GB
 
@@ -48,15 +49,15 @@ def startup_event():
     global model
     global device
     global tokenizer
-    print("Loading the model..............")
+    logger.info("Loading the model........")
     start_timer = timer()
     device = torch_device('cuda' if is_cuda_available() else 'cpu')
     model = MBartForConditionalGeneration.from_pretrained(Args.model_path)
     model.to(device)
     tokenizer = MBartTokenizer.from_pretrained(Args.model_path)
     end_timer = timer()
-    print("Loaded the model")
-    print("Time taken to load the model: " + str(round(end_timer - start_timer, 4)) + " s")
+    logger.info("Loaded the model")
+    logger.info("Time taken to load the model: " + str(round(end_timer - start_timer, 4)) + " s")
     del start_timer
     del end_timer
 
@@ -97,32 +98,32 @@ def generate_simp(body: RequestBody):
     try:
         start_timer = timer()
         text = body.text
-        print("Received for /generate: " + str(text))
+        logger.debug("Received for /generate: " + str(text))
         try:
             redis_result = redis_client.get(f':{text}')
             if redis_result:
-                print(f'search result from redis:{redis_result}')
+                logger.debug(f'search result from redis:{redis_result}')
                 cached_result = json.loads(redis_result)
                 return cached_result
         except Exception as e:
             traceback.print_exc()
-            print("Redis connection error")
+            logger.error("Redis connection error")
 
         input_sent = text.split("\n")
-        print("Length of input: " + str(len(input_sent)))
-        print("Input: " + str(input_sent).strip())
+        logger.debug("Length of input: " + str(len(input_sent)))
+        logger.debug("Input: " + str(input_sent).strip())
         out = generate(input_sent)
 
         try:
             redis_client.set(f':{text}', json.dumps({"simplification": str(out)}))
             redis_client.expire(f':{text}', timedelta(seconds=cache_expire_in_seconds))
         except Exception as e:
-            print("Redis setting cache error")
+            logger.error("Redis setting cache error")
             pass
 
-        print("Output from /generate: " + str(out).strip())
+        logger.debug("Output from /generate: " + str(out).strip())
         end_timer = timer()
-        print("Time taken: " + str(round(end_timer - start_timer, 4)) + " s")
+        logger.debug("Time taken: " + str(round(end_timer - start_timer, 4)) + " s")
         return {"simplification": out}
     except Exception as e:
 
