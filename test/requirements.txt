@@ -1,0 +1,4 @@
+python-dotenv
+uvicorn
+fastapi
+starlette_exporter
