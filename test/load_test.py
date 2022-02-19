@@ -57,7 +57,7 @@ class BackendUser(HttpUser):
         self.client.post("/generate", json=data)
 
 
-def test_load(users=1, spawn_rate=2, time_s=300):
+def test_load(users=5, spawn_rate=10, time_s=200):
     # setup Environment and Runner
     env = Environment(user_classes=[BackendUser])
     env.create_local_runner()
