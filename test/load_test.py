@@ -54,7 +54,7 @@ class BackendUser(HttpUser):
     @task
     def generate_task(self):
         data = {"text": get_random_text()}
-        self.client.post("/generate", data=str(data))
+        self.client.post("/generate", data=data)
 
 
 def test_load(users=1, spawn_rate=5, time_s=20):
@@ -90,4 +90,5 @@ def test_load(users=1, spawn_rate=5, time_s=20):
 
 
 if __name__ == '__main__':
-    test_load(users=1, spawn_rate=5, time_s=15)
+    # test_load(users=1, spawn_rate=5, time_s=15)
+    print(get_random_text())
