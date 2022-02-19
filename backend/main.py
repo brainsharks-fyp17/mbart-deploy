@@ -1,15 +1,19 @@
 import json
 import logging.config
 import os
+import random
 import traceback
 from datetime import timedelta
 from timeit import default_timer as timer
 
+import prometheus_client
 import redis
 from dotenv import load_dotenv
 from fastapi import FastAPI
 from pydantic import BaseModel
 from starlette_exporter import PrometheusMiddleware, handle_metrics
+from prometheus_client import Histogram, CollectorRegistry
+
 from torch import device as torch_device
 from torch.cuda import is_available as is_cuda_available
 from transformers import MBartTokenizer, MBartForConditionalGeneration
@@ -51,10 +55,10 @@ def startup_event():
     global tokenizer
     logger.info("Loading the model........")
     start_timer = timer()
-    device = torch_device('cuda' if is_cuda_available() else 'cpu')
-    model = MBartForConditionalGeneration.from_pretrained(Args.model_path)
-    model.to(device)
-    tokenizer = MBartTokenizer.from_pretrained(Args.model_path)
+    # device = torch_device('cuda' if is_cuda_available() else 'cpu')
+    # model = MBartForConditionalGeneration.from_pretrained(Args.model_path)
+    # model.to(device)
+    # tokenizer = MBartTokenizer.from_pretrained(Args.model_path)
     end_timer = timer()
     logger.info("Loaded the model")
     logger.info("Time taken to load the model: " + str(round(end_timer - start_timer, 4)) + " s")
@@ -98,11 +102,11 @@ def generate_simp(body: RequestBody):
     try:
         start_timer = timer()
         text = body.text
-        logger.debug("Received for /generate: " + str(text))
+        logger.info("Received for /generate: " + str(text))
         try:
             redis_result = redis_client.get(f':{text}')
             if redis_result:
-                logger.debug(f'search result from redis:{redis_result}')
+                logger.info(f'search result from redis:{redis_result}')
                 cached_result = json.loads(redis_result)
                 return cached_result
         except Exception as e:
@@ -110,8 +114,8 @@ def generate_simp(body: RequestBody):
             logger.error("Redis connection error")
 
         input_sent = text.split("\n")
-        logger.debug("Length of input: " + str(len(input_sent)))
-        logger.debug("Input: " + str(input_sent).strip())
+        logger.info("Length of input: " + str(len(input_sent)))
+        logger.info("Input: " + str(input_sent).strip())
         out = generate(input_sent)
 
         try:
@@ -121,9 +125,9 @@ def generate_simp(body: RequestBody):
             logger.error("Redis setting cache error")
             pass
 
-        logger.debug("Output from /generate: " + str(out).strip())
+        logger.info("Output from /generate: " + str(out).strip())
         end_timer = timer()
-        logger.debug("Time taken: " + str(round(end_timer - start_timer, 4)) + " s")
+        logger.info("Time taken: " + str(round(end_timer - start_timer, 4)) + " s")
         return {"simplification": out}
     except Exception as e:
 
@@ -144,4 +148,4 @@ def health():
 if __name__ == "__main__":
     import uvicorn
 
-    uvicorn.run("main:app", debug=True, reload=False, host="0.0.0.0")
+    uvicorn.run("main:app", info=False, reload=False, host="0.0.0.0")
