@@ -54,10 +54,10 @@ class BackendUser(HttpUser):
     @task
     def generate_task(self):
         data = {"text": get_random_text()}
-        self.client.post("/generate", data=data)
+        self.client.post("/generate", json=data)
 
 
-def test_load(users=1, spawn_rate=2, time_s=60):
+def test_load(users=1, spawn_rate=2, time_s=35):
     # setup Environment and Runner
     backend = Backend()
     env = Environment(user_classes=[BackendUser])
@@ -92,3 +92,6 @@ def test_load(users=1, spawn_rate=2, time_s=60):
 if __name__ == '__main__':
     # test_load(users=1, spawn_rate=5, time_s=15)
     print(get_random_text())
+    import requests
+    resp = requests.post("http://localhost:8000/generate", json={"text": str("huhhu iij")})
+    print(resp)
