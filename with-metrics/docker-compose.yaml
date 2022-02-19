@@ -2,6 +2,7 @@ version: "3.7"
 volumes:
   prometheus_data: { }
   grafana_data: { }
+  loki_data: {}
 services:
   backend-service:
     build:
@@ -30,7 +31,7 @@ services:
     image: prom/prometheus
     container_name: prometheus
     volumes:
-      - ./prometheus:/etc/prometheus
+      - ../monitoring/prometheus:/etc/prometheus
       - prometheus_data:/prometheus
     command:
       - '--config.file=/etc/prometheus/prometheus.yml'
@@ -49,8 +50,8 @@ services:
     container_name: grafana
     volumes:
       - grafana_data:/var/lib/grafana
-      - ./dashboards:/etc/grafana/provisioning/dashboards
-      - ./datasources:/etc/grafana/provisioning/datasources
+      - ../monitoring/dashboards:/etc/grafana/provisioning/dashboards
+      - ../monitoring/datasources:/etc/grafana/provisioning/datasources
     environment:
       - GF_SECURITY_ADMIN_USER=${ADMIN_USER:-admin}
       - GF_SECURITY_ADMIN_PASSWORD=${ADMIN_PASSWORD:-admin}
@@ -61,17 +62,22 @@ services:
     expose:
       - 3000
   loki:
-    image: grafana/loki:2.4.2
+    image: grafana/loki
+    volumes:
+      - ../monitoring/loki/loki-config.yaml:/etc/loki/loki-config.yaml
+      - loki_data:/data/loki
     ports:
       - "3100:3100"
     command: -config.file=/etc/loki/local-config.yaml
   promtail:
-    image: grafana/promtail:2.4.2
+    image: grafana/promtail
     volumes:
       - /var/log:/var/log
+      - /var/lib/docker/containers:/var/lib/docker/containers:ro
+      - ../monitoring/promtail/promtail-config.yaml:/etc/promtail/promtail-config.yaml
     command: -config.file=/etc/promtail/config.yml
   cadvisor:
-    image: gcr.io/cadvisor/cadvisor:v0.43.0
+    image: gcr.io/cadvisor/cadvisor
     container_name: cadvisor
     privileged: true
     devices:
@@ -87,4 +93,3 @@ services:
       - "8082:8080"
     expose:
       - 8080
-

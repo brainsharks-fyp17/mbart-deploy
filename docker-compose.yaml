@@ -2,6 +2,7 @@ version: "3.7"
 volumes:
   prometheus_data: { }
   grafana_data: { }
+  loki_data: { }
 services:
   frontend-service:
     build:
@@ -82,17 +83,22 @@ services:
     expose:
       - 3000
   loki:
-    image: grafana/loki:2.4.2
+    image: grafana/loki
+    volumes:
+      - ./monitoring/loki/loki-config.yaml:/etc/loki/loki-config.yaml
+      - loki_data:/data/loki
     ports:
       - "3100:3100"
     command: -config.file=/etc/loki/local-config.yaml
   promtail:
-    image: grafana/promtail:2.4.2
+    image: grafana/promtail
     volumes:
       - /var/log:/var/log
+      - /var/lib/docker/containers:/var/lib/docker/containers:ro
+      - ./monitoring/promtail/promtail-config.yaml:/etc/promtail/promtail-config.yaml
     command: -config.file=/etc/promtail/config.yml
   cadvisor:
-    image: gcr.io/cadvisor/cadvisor:v0.43.0
+    image: gcr.io/cadvisor/cadvisor
     container_name: cadvisor
     privileged: true
     devices:
