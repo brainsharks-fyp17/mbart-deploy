@@ -57,9 +57,8 @@ class BackendUser(HttpUser):
         self.client.post("/generate", json=data)
 
 
-def test_load(users=1, spawn_rate=2, time_s=35):
+def test_load(users=1, spawn_rate=2, time_s=300):
     # setup Environment and Runner
-    backend = Backend()
     env = Environment(user_classes=[BackendUser])
     env.create_local_runner()
 
@@ -86,6 +85,7 @@ def test_load(users=1, spawn_rate=2, time_s=35):
     assert env.stats.total.get_response_time_percentile(0.95) < 100
 
     # backend.kill()
+    # todo start the backend
     # todo kill the backend
 
 
