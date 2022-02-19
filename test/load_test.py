@@ -1,6 +1,7 @@
 import os
 import signal
 import time
+import random
 
 import gevent
 import gevent.monkey
@@ -11,6 +12,7 @@ from locust import HttpUser, task, between, constant
 from locust.env import Environment
 from locust.log import setup_logging
 from locust.stats import stats_printer, stats_history
+from input import text
 
 setup_logging("INFO", None)
 logger = logging.getLogger("pytest")
@@ -27,7 +29,10 @@ class Backend:
 
 
 def get_random_text() -> str:
-    return "decdccf ucfe dvufe "
+    output = ""
+    for i in range(random.randint(2, 15)):
+        output += random.choice(text) + " "
+    return output + "."
 
 
 class BackendUser(HttpUser):
@@ -48,7 +53,7 @@ class BackendUser(HttpUser):
 
     @task
     def generate_task(self):
-        self.client.get("/health")
+        self.client.post("/generate", data={"text": get_random_text()})
 
 
 def test_load(users=1, spawn_rate=5, time_s=20):
