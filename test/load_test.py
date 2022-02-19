@@ -22,7 +22,7 @@ class Backend:
     def __init__(self):
         import subprocess
         self.process = subprocess.Popen(["python3", "../backend/main.py"])
-        time.sleep(10)
+        time.sleep(25)
 
     def kill(self):
         os.killpg(os.getpgid(self.process.pid), signal.SIGHUP)
@@ -57,7 +57,7 @@ class BackendUser(HttpUser):
         self.client.post("/generate", data=data)
 
 
-def test_load(users=1, spawn_rate=5, time_s=20):
+def test_load(users=1, spawn_rate=2, time_s=60):
     # setup Environment and Runner
     backend = Backend()
     env = Environment(user_classes=[BackendUser])
