@@ -87,6 +87,8 @@ services:
     volumes:
       - ./monitoring/loki/loki-config.yaml:/etc/loki/loki-config.yaml
       - loki_data:/data/loki
+    expose:
+      - 3100
     ports:
       - "3100:3100"
     command: -config.file=/etc/loki/local-config.yaml
