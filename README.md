@@ -1,12 +1,17 @@
-### Run
+## Run locally
 Start the frontend
 Add the following `.env` file in the `frontend` directory
 ```
 BACKEND_HOST=backend-service
 BACKEND_PORT=8000
 ```
+Install dependencies
 ```bash
-cd frontend && python3 main.py
+cd frontend
+pip install -r requirements.txt
+```
+```bash
+python3 main.py
 ```
 Start the backend
 Add the following `.env` file in the `backend` directory
@@ -19,18 +24,24 @@ ENABLE_METRICS=1
 REDIS_HOST=redis-service
 REDIS_PORT=6379
 ```
+Install dependencies
+```bash
+cd backend
+pip install -r requirements.txt -r requirements-local.txt 
 ```
-cd frontend && python3 main.py
+```bash
+python3 main.py
 ```
 
-### Run using Docker Compose
+## Run using Docker Compose
+Add the `.env` files to the respective directories.<br>
 From the root of the repository,
 ```bash
-docker-compsoe up
+docker-compose up
 ```
 
 
-## Build new images
+## Build new Docker images
 Login to docker hub
 ```bash
 docker login
@@ -47,3 +58,6 @@ cd frontend
 docker build -t rumeshms16/simp-frontend:1.0.0 .
 docker push rumeshms16/simp-frontend:1.0.0
 ```
+
+## Deploy on K8s
+See [k8s-resources](k8s-resources)
