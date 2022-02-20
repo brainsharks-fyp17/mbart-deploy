@@ -31,7 +31,7 @@ spec:
     spec:
       containers:
         - name: backend-deployment
-          image: dock-reg-0001.ml/asset-app:0.1.4
+          image: rumeshms16/mabrt-simp
           imagePullPolicy: Always
           env:
             - name: MODEL_PATH

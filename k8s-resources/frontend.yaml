@@ -26,7 +26,7 @@ spec:
     spec:
       containers:
         - name: frontend-deployment
-          image: dock-reg-0001.ml/asset-app:0.1.4
+          image: rumeshms16/simp-frontend
           imagePullPolicy: Always
           env:
             - name: BACKEND_HOST
