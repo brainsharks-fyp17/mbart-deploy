@@ -19,6 +19,7 @@ COPY . /usr/src/app
 ENV PYTHONUNBUFFERED 1
 ENV PATH="/opt/venv/bin:$PATH"
 EXPOSE 8000
+ENV MODEL_PATH=Rumesh/mbart-si-simp
 RUN python cache_model.py
 #ENTRYPOINT ["uvicorn"]
 #CMD ["main:app","--port","8000","--log-level","debug"]
