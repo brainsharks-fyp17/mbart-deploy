@@ -31,7 +31,7 @@ spec:
     spec:
       containers:
         - name: backend-deployment
-          image: rumeshms16/mabrt-simp
+          image: rumeshms16/mabrt-simp:1.0.0
           imagePullPolicy: Always
           env:
             - name: MODEL_PATH

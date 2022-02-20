@@ -26,7 +26,7 @@ spec:
     spec:
       containers:
         - name: frontend-deployment
-          image: rumeshms16/simp-frontend
+          image: rumeshms16/simp-frontend:1.0.0
           imagePullPolicy: Always
           env:
             - name: BACKEND_HOST
