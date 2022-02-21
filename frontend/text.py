@@ -1,6 +1,9 @@
 article = """
-Automatic text simplification is the process of reducing the linguistic <b>complexity</b> of a text to improve its understandability and readability,
-This supports markdown.
+
+Text Simplification<br>
+Automatic text simplification is the process of reducing the complexity of a given text while preserving<br>its original 
+meaning, with the intention of improving readability and understanding.<br>
+
 
 """
 
