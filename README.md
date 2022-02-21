@@ -61,3 +61,5 @@ docker push rumeshms16/simp-frontend:1.0.0
 
 ## Deploy on K8s
 See [k8s-resources](k8s-resources)
+![ml-deploy](https://user-images.githubusercontent.com/32504465/154938944-95257691-75e0-4775-9df1-e784d289aec7.png)
+
