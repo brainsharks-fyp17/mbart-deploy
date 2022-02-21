@@ -37,7 +37,7 @@ python3 main.py
 Add the `.env` files to the respective directories.<br>
 From the root of the repository,
 ```bash
-docker-compose up
+docker-compose up --build
 ```
 
 
