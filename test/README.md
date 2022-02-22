@@ -1,4 +1,4 @@
-Install requirements
+Install testing requirements
 ```bash
 pip install requirements.txt
 ```
