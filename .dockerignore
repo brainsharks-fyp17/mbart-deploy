@@ -1,1 +1,5 @@
 ./monitoring
+./test
+./k8s-resources
+./with-metrics
+*.env
