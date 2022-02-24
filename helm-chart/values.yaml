@@ -2,11 +2,11 @@
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 backend:
-  modelName: "Rumesh/mbart-si-simp"
-  maxLength: "700"
-  numBeams: "5"
-  task: "com-sim"
-  replicas: "2"
+  modelName: Rumesh/mbart-si-simp
+  maxLength: 700
+  numBeams: 5
+  task: com-sim
+  replicas: 2
 
 
 ingress:
