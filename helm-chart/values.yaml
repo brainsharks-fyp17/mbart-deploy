@@ -6,7 +6,7 @@ backend:
   maxLength: "700"
   numBeams: "5"
   task: "com-sim"
-  replicas: 2
+  replicas: "2"
 
 
 ingress:
