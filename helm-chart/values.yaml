@@ -6,6 +6,9 @@ backend:
   maxLength: "700"
   numBeams: "5"
   task: "com-sim"
+  replicas: 2
+
+
 ingress:
   enabled: true
   annotations: {}
@@ -45,7 +48,7 @@ fluent-bit:
   enabled: false
 
 grafana:
-  enabled: false
+  enabled: true
   sidecar:
     datasources:
       enabled: true
@@ -54,3 +57,7 @@ grafana:
 
 prometheus:
   enabled: true
+  extraScrapeConfigs: |
+    - job_name: "backend"
+      static_configs:
+        - targets: ["backend-service:8000"]
