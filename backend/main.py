@@ -5,6 +5,7 @@ import random
 import traceback
 from datetime import timedelta
 from timeit import default_timer as timer
+from typing import List
 
 import prometheus_client
 import redis
@@ -66,6 +67,21 @@ def startup_event():
     del end_timer
 
 
+def sanitize_input(line: str):
+    # todo
+    out = line
+    return out
+
+
+def clean(line: str):
+    out = line.strip().replace('<pad>', '').replace('</s>', '').strip(" ")
+
+    # Fix zero-width joiner issue.
+    # out = out.replace("\u0dca \u0dbb", "\u0dca\u200d\u0dbb").replace("\u0dca \u0dba", "\u0dca\u200d\u0dba")
+    out = out.replace("sim", "").strip()
+    return out
+
+
 def generate(source_sentences: list):
     global tokenizer
     global model
@@ -84,11 +100,7 @@ def generate(source_sentences: list):
 
         # Remove pad and eos tokens.
         out = out[0]
-        out = out.strip().replace('<pad>', '').replace('</s>', '').strip(" ")
-
-        # Fix zero-width joiner issue.
-        out = out.replace("\u0dca \u0dbb", "\u0dca\u200d\u0dbb").replace("\u0dca \u0dba", "\u0dca\u200d\u0dba")
-        out = out.replace("sim", "").strip()
+        out = clean(out)
         generated += out + "\n"
     return generated
 
@@ -112,7 +124,7 @@ def generate_simp(body: RequestBody):
         except Exception as e:
             traceback.print_exc()
             logger.error("Redis connection error")
-
+        text = sanitize_input(text)
         input_sent = text.split("\n")
         logger.info("Length of input: " + str(len(input_sent)))
         logger.info("Input: " + str(input_sent).strip())
@@ -130,7 +142,6 @@ def generate_simp(body: RequestBody):
         logger.info("Time taken: " + str(round(end_timer - start_timer, 4)) + " s")
         return {"simplification": out}
     except Exception as e:
-
         traceback.print_exc()
         return {"error": str(e)}, 500
 
@@ -138,11 +149,6 @@ def generate_simp(body: RequestBody):
 @app.get('/health')
 def health():
     return {}
-
-
-# @app.get('/busy')
-# def busy_status():
-#     return {"is_busy": is_busy}
 
 
 if __name__ == "__main__":
