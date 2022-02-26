@@ -15,7 +15,7 @@ spec:
   selector:
     matchLabels:
       app: redis
-  replicas: 1
+  replicas: {{ .Values.redis.replicas }}
   strategy:
     type: RollingUpdate
   template:
@@ -25,7 +25,7 @@ spec:
     spec:
       containers:
         - name: redis
-          image: "redis:"{{ .Values.redis.tag }}
+          image: {{ .Values.redis.image }}
           command:
             - redis-server
             - "/redis-master/redis.conf"
