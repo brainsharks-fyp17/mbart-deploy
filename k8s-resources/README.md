@@ -30,8 +30,9 @@ minikube dashboard &
 ```
 Add monitoring tools: Grafana, Loki, Promtail 
 ```bash
-helm upgrade --install loki grafana/loki-stack  --set grafana.enabled=true,prometheus.enabled=true,prometheus.alertmanager.persistentVolume.enabled=false,prometheus.server.persistentVolume.enabled=false
+helm upgrade --install loki grafana/loki-stack  --set grafana.enabled=true,prometheus.enabled=true,prometheus.alertmanager.persistentVolume.enabled=false,prometheus.server.persistentVolume.enabled=false --set-file extraScrapeConfigs=k8s-resources/extraScrapeConfigs.yaml --set-file prometheus.extraScrapeConfigs=k8s-resources/extraScrapeConfigs.yaml
 ```
+The --set-file flag sets the prometheus config required for prometheus to scrape metrics from the backend. <br>
 Deploy the application on k8s
 ```bash
 kubectl apply -f ./k8s-resources
