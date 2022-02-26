@@ -5,7 +5,7 @@ metadata:
 data:
   redis-config: |
     maxmemory 10mb
-    maxmemory-policy volatile-ttl
+    maxmemory-policy {{ .Values.redis.maxmemoryPolicy }}
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -25,7 +25,7 @@ spec:
     spec:
       containers:
         - name: redis
-          image: redis:6-alpine3.14
+          image: "redis:"{{ .Values.redis.tag }}
           command:
             - redis-server
             - "/redis-master/redis.conf"
