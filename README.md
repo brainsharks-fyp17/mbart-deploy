@@ -118,3 +118,10 @@ kubectl port-forward svc/loki-grafana 3000:80 --address=0.0.0.0 &
 ```
 ### Deploy on GKE
 todo
+
+## Model monitoring
+We use Prometheus to collect metrics, Loki to collect logs, and Grafana to visualize them.
+todo
+
+## tests
+see [test](./test)
