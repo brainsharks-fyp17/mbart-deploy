@@ -25,7 +25,7 @@ spec:
     spec:
       containers:
         - name: redis
-          image: {{ .Values.redis.image }}
+          image: redis:6-alpine
           command:
             - redis-server
             - "/redis-master/redis.conf"

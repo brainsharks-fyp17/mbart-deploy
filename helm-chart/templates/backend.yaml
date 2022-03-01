@@ -7,9 +7,9 @@ data:
   MAX_LENGTH: {{ .Values.backend.maxLength }}
   NUM_BEAMS: {{ .Values.backend.numBeams }}
   TASK: {{ .Values.backend.task }}
-  ENABLE_METRICS: "1"
+  ENABLE_METRICS: 1
   REDIS_HOST: "redis-service"
-  REDIS_PORT: "6379"
+  REDIS_PORT: 6379
 ---
 apiVersion: apps/v1
 kind: Deployment
