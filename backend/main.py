@@ -91,10 +91,10 @@ def generate(source_sentences: list):
     for line in source_sentences:
         # Attach task prefix.
         line = Args.task + ": " + line
-
         inputs = tokenizer(line, max_length=700, return_tensors="pt", padding=True).to(device)
+        len_penalty = 0.1 if len(line.split()) > 5 else 0.8
         summary_ids = model.generate(inputs["input_ids"], num_beams=int(Args.num_beams),
-                                     max_length=int(Args.max_length), length_penalty=0.1).to(device)
+                                     max_length=int(Args.max_length), length_penalty=len_penalty).to(device)
         out = tokenizer.batch_decode(summary_ids, skip_special_tokens=True,
                                      clean_up_tokenization_spaces=False)
 
