@@ -1,19 +1,12 @@
-import json
 import logging.config
 import os
-import random
 import traceback
-from datetime import timedelta
 from timeit import default_timer as timer
-from typing import List
 
-import prometheus_client
-import redis
 from dotenv import load_dotenv
 from fastapi import FastAPI
 from pydantic import BaseModel
 from starlette_exporter import PrometheusMiddleware, handle_metrics
-from prometheus_client import Histogram, CollectorRegistry
 
 from torch import device as torch_device
 from torch.cuda import is_available as is_cuda_available
@@ -22,8 +15,6 @@ from transformers import MBartTokenizer, MBartForConditionalGeneration
 load_dotenv()
 app = FastAPI()
 logger = logging.getLogger("uvicorn")
-redis_client = redis.Redis(host=os.environ['REDIS_HOST'], port=int(os.environ['REDIS_PORT']))
-
 app.add_middleware(PrometheusMiddleware,
                    app_name="backend",
                    prefix="backend",
@@ -115,27 +106,11 @@ def generate_simp(body: RequestBody):
         start_timer = timer()
         text = body.text
         logger.info("Received for /generate: " + str(text))
-        try:
-            redis_result = redis_client.get(f':{text}')
-            if redis_result:
-                logger.info(f'search result from redis:{redis_result}')
-                cached_result = json.loads(redis_result)
-                return cached_result
-        except Exception as e:
-            traceback.print_exc()
-            logger.error("Redis connection error")
         text = sanitize_input(text)
         input_sent = text.split("\n")
         logger.info("Length of input: " + str(len(input_sent)))
         logger.info("Input: " + str(input_sent).strip())
         out = generate(input_sent)
-
-        try:
-            redis_client.set(f':{text}', json.dumps({"simplification": str(out)}))
-            redis_client.expire(f':{text}', timedelta(seconds=cache_expire_in_seconds))
-        except Exception as e:
-            logger.error("Redis setting cache error")
-            pass
 
         logger.info("Output from /generate: " + str(out).strip())
         end_timer = timer()

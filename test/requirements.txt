@@ -1,6 +1,0 @@
-pytest
-python-dotenv
-locust
-gevent
-selenium==4.0.0
-webdriver-manager==3.5.1
