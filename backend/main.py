@@ -129,4 +129,4 @@ def health():
 if __name__ == "__main__":
     import uvicorn
 
-    uvicorn.run("main:app", debug=False, reload=False, host="0.0.0.0")
+    uvicorn.run("main:app", debug=False, reload=False, host="0.0.0.0", port=os.environ['PORT'])

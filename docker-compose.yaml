@@ -5,22 +5,48 @@ services:
       context: frontend
       dockerfile: Dockerfile
     environment:
-      - PORT=5000
-    env_file:
-      - frontend/.env
+      PORT: 5000
+      BACKEND_HOST: backend-service
+      BACKEND_PORT: 8000
+      BACKEND_HOST2: backend-service2
+      BACKEND_PORT2: 8002
     ports:
       - "5000:5000"
     links:
       - backend-service
-      - redis-service
+      - backend-service2
   backend-service:
     build:
       context: backend
       dockerfile: Dockerfile
-    env_file:
-      - backend/.env
+    environment:
+      MODEL_PATH: Rumesh/mbart-si-simp
+      MAX_LENGTH: 700
+      NUM_BEAMS: 5
+      TASK: com-sim
+      ENABLE_METRICS: 1
+      REDIS_HOST: redis-service
+      REDIS_PORT: 6379
+      PORT: 8000
     expose:
       - 8000
     ports:
       - "8000:8000"
+  backend-service2:
+    build:
+      context: backend
+      dockerfile: Dockerfile
+    environment:
+      MODEL_PATH: Rumesh/mbart-tr-simp
+      MAX_LENGTH: 700
+      NUM_BEAMS: 5
+      TASK: com-sim
+      ENABLE_METRICS: 1
+      REDIS_HOST: redis-service
+      REDIS_PORT: 6379
+      PORT: 8002
+    expose:
+      - 8002
+    ports:
+      - "8002:8002"
 
