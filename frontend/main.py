@@ -24,23 +24,30 @@ def get_simplification(text):
     response = requests.post(url, json=data).json()
     return response["simplification"]
 
+
 def get_simplification2(text):
     url = "http://" + backend_host2 + ":" + str(backend_port2) + "/" + request_path
     data = {"text": text}
     response = requests.post(url, json=data).json()
     return response["simplification"]
 
+
+def resp(text):
+    return get_simplification(text), get_simplification2(text)
+
+
 gradio.close_all()  # close already running instances
 text_input = gradio.inputs.Textbox(lines=10, placeholder="Type here", label="Complex Sentence")
-output = gradio.outputs.Textbox(type="str", label="Simplified")
+output = gradio.outputs.Textbox(type="str", label="Simp")
+output2 = gradio.outputs.Textbox(type="str", label="Trans Simp")
 
 iface = gradio.Interface(
-    fn=get_simplification,
-    title="Simplification only",
+    fn=resp,
+    title="Text Simplification for Sinhala Language",
     description=description,
     article=article,
     inputs=[text_input],
-    outputs=output,
+    outputs=[output, output2],
     theme="dark-huggingface",
     allow_flagging="never",
     allow_screenshot=False,
@@ -48,18 +55,5 @@ iface = gradio.Interface(
     css="custom.css",
     examples=examples
 )
-iface2 = gradio.Interface(
-    fn=get_simplification2,
-    title="Translation -> Simplification",
-    description=description,
-    article=article,
-    inputs=[text_input],
-    outputs=output,
-    theme="dark-huggingface",
-    allow_flagging="never",
-    allow_screenshot=False,
-    analytics_enabled=True,
-    css="custom.css",
-    examples=examples
-)
-Parallel(iface, iface2).launch(share=False, server_port=5000, server_name="0.0.0.0")
+
+iface.launch(share=False, server_port=5000, server_name="0.0.0.0")
