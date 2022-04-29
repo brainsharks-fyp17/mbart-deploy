@@ -77,7 +77,7 @@ def clean(line: str):
     out = line.strip().replace('<pad>', '').replace('</s>', '').strip(" ")
 
     # Fix zero-width joiner issue.
-    out = out.replace("\u0dca \u0dbb", "\u0dca\u200d\u0dbb").replace("\u0dca \u0dba", "\u0dca\u200d\u0dba")
+    # out = out.replace("\u0dca \u0dbb", "\u0dca\u200d\u0dbb").replace("\u0dca \u0dba", "\u0dca\u200d\u0dba")
     out = out.replace("sim", "").strip()
     return out
 
